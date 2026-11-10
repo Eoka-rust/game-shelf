@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Полка игр</title>
+  <style>
+    :root { color-scheme: light dark; }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0; padding: 32px 16px;
+      font: 16px/1.5 system-ui, -apple-system, "Segoe UI", sans-serif;
+      background: #0f172a; color: #e2e8f0;
+    }
+    main { max-width: 760px; margin: 0 auto; }
+    header { display: flex; justify-content: space-between; align-items: baseline; gap: 12px; }
+    h1 { font-size: 28px; margin: 0 0 4px; }
+    .muted { color: #94a3b8; font-size: 14px; }
+    .version {
+      font: 13px ui-monospace, SFMono-Regular, Menlo, monospace;
+      background: #1e293b; border: 1px solid #334155;
+      padding: 4px 10px; border-radius: 999px;
+    }
+    form {
+      display: grid; grid-template-columns: 2fr 1fr 1fr auto; gap: 8px;
+      margin: 24px 0; padding: 16px;
+      background: #1e293b; border: 1px solid #334155; border-radius: 12px;
+    }
+    input, select, button {
+      font: inherit; padding: 8px 10px; border-radius: 8px;
+      border: 1px solid #475569; background: #0f172a; color: inherit;
+    }
+    button { cursor: pointer; background: #2563eb; border-color: #2563eb; font-weight: 600; }
+    button:hover { background: #1d4ed8; }
+    ul { list-style: none; padding: 0; margin: 0; display: grid; gap: 8px; }
+    li {
+      display: flex; align-items: center; justify-content: space-between; gap: 12px;
+      padding: 12px 16px; background: #1e293b;
+      border: 1px solid #334155; border-radius: 10px;
+    }
+    .title { font-weight: 600; }
+    .row { display: flex; align-items: center; gap: 12px; }
+    .empty { padding: 24px; text-align: center; color: #94a3b8; }
+    @media (max-width: 620px) {
+      form { grid-template-columns: 1fr; }
+      li { flex-direction: column; align-items: flex-start; }
+    }
+  </style>
+</head>
+<body>
+<main>
+  <header>
+    <div>
+      <h1>Полка игр</h1>
+      <div class="muted">Что пройдено, что в процессе, что ждёт своей очереди</div>
+    </div>
+    <div class="version" id="version">версия …</div>
+  </header>
+
+  <form id="add-form">
+    <input id="title" name="title" placeholder="Название игры" required maxlength="200" autocomplete="off">
+    <input id="platform" name="platform" placeholder="Платформа" required maxlength="50" autocomplete="off">
+    <select id="status" name="status">
+      <option value="backlog">В очереди</option>
+      <option value="playing">Играю</option>
+      <option value="completed">Пройдена</option>
+    </select>
+    <button type="submit">Добавить</button>
+  </form>
+
+  <ul id="list"></ul>
+  <div class="empty" id="empty" hidden>Пока пусто — добавьте первую игру</div>
+</main>
+
+<script>
+const STATUS_LABELS = {
+  backlog: "В очереди",
+  playing: "Играю",
+  completed: "Пройдена",
+};
+
+const listEl = document.getElementById("list");
+const emptyEl = document.getElementById("empty");
+
+async function loadVersion() {
+  try {
+    const data = await fetch("/version").then((r) => r.json());
+    document.getElementById("version").textContent = "версия " + data.version;
+  } catch {
+    document.getElementById("version").textContent = "версия недоступна";
+  }
+}
+
+function render(game) {
+  const li = document.createElement("li");
+
+  const left = document.createElement("div");
+  const title = document.createElement("div");
+  title.className = "title";
+  title.textContent = game.title;
+  const meta = document.createElement("div");
+  meta.className = "muted";
+  meta.textContent = game.platform;
+  left.append(title, meta);
+
+  const select = document.createElement("select");
+  for (const [value, label] of Object.entries(STATUS_LABELS)) {
+    const option = document.createElement("option");
+    option.value = value;
+    option.textContent = label;
+    option.selected = value === game.status;
+    select.append(option);
+  }
+  select.addEventListener("change", async (event) => {
+    await fetch(`/games/${game.id}`, {
+      method: "PATCH",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ status: event.target.value }),
+    });
+    loadGames();
+  });
+
+  const row = document.createElement("div");
+  row.className = "row";
+  row.append(select);
+
+  li.append(left, row);
+  return li;
+}
+
+async function loadGames() {
+  const games = await fetch("/games").then((r) => r.json());
+  listEl.replaceChildren(...games.map(render));
+  emptyEl.hidden = games.length > 0;
+}
+
+document.getElementById("add-form").addEventListener("submit", async (event) => {
+  event.preventDefault();
+  const payload = {
+    title: document.getElementById("title").value,
+    platform: document.getElementById("platform").value,
+    status: document.getElementById("status").value,
+  };
+  await fetch("/games", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(payload),
+  });
+  event.target.reset();
+  loadGames();
+});
+
+loadVersion();
+loadGames();
+</script>
+</body>
+</html>
