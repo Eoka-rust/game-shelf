@@ -78,6 +78,17 @@ def test_patch_unknown_game_returns_404(client):
     assert response.status_code == 404
 
 
+def test_delete_removes_game(client):
+    game_id = client.post("/games", json={"title": "Hades", "platform": "PC"}).json()["id"]
+
+    assert client.delete(f"/games/{game_id}").status_code == 204
+    assert client.get("/games").json() == []
+
+
+def test_delete_unknown_game_returns_404(client):
+    assert client.delete("/games/999").status_code == 404
+
+
 def test_unknown_status_is_rejected(client):
     response = client.post("/games", json={"title": "Hades", "platform": "PC", "status": "dropped"})
     assert response.status_code == 422

@@ -106,6 +106,13 @@ class GameRepo:
         await self.conn.commit()
         return row
 
+    async def delete_game(self, game_id: int) -> bool:
+        async with self.conn.cursor() as cur:
+            await cur.execute("DELETE FROM games WHERE id = %s RETURNING id", (game_id,))
+            row = await cur.fetchone()
+        await self.conn.commit()
+        return row is not None
+
 
 async def get_repo() -> AsyncIterator[GameRepo]:
     async with await psycopg.AsyncConnection.connect(settings.database_url) as conn:

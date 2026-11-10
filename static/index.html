@@ -32,6 +32,10 @@
     }
     button { cursor: pointer; background: #2563eb; border-color: #2563eb; font-weight: 600; }
     button:hover { background: #1d4ed8; }
+    button.danger {
+      background: transparent; border-color: #7f1d1d; color: #f87171; font-weight: 500;
+    }
+    button.danger:hover { background: #7f1d1d; color: #fee2e2; }
     ul { list-style: none; padding: 0; margin: 0; display: grid; gap: 8px; }
     li {
       display: flex; align-items: center; justify-content: space-between; gap: 12px;
@@ -133,9 +137,19 @@ function render(game) {
     loadGames();
   });
 
+  const remove = document.createElement("button");
+  remove.type = "button";
+  remove.className = "danger";
+  remove.textContent = "Удалить";
+  remove.addEventListener("click", async () => {
+    if (!confirm(`Удалить «${game.title}»?`)) return;
+    await fetch(`/games/${game.id}`, { method: "DELETE" });
+    loadGames();
+  });
+
   const row = document.createElement("div");
   row.className = "row";
-  row.append(select);
+  row.append(select, remove);
 
   li.append(left, row);
   return li;

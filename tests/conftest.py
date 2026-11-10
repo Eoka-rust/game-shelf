@@ -55,6 +55,11 @@ class FakeRepo:
                 return game
         return None
 
+    async def delete_game(self, game_id: int) -> bool:
+        before = len(self.games)
+        self.games = [game for game in self.games if game["id"] != game_id]
+        return len(self.games) < before
+
 
 @pytest.fixture
 def repo() -> FakeRepo:

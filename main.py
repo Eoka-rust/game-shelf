@@ -82,3 +82,9 @@ async def update_game(
     if game is None:
         raise HTTPException(status_code=404, detail="Игра не найдена")
     return game
+
+
+@app.delete("/games/{game_id}", status_code=204)
+async def delete_game(game_id: int, repo: GameRepo = Depends(get_repo)) -> None:
+    if not await repo.delete_game(game_id):
+        raise HTTPException(status_code=404, detail="Игра не найдена")

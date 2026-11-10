@@ -5,6 +5,18 @@
 
 ## [Unreleased]
 
+## [1.2.0] - 2026-11-11
+
+### Added
+
+- `DELETE /games/{id}` — удаление игры, `204` при успехе и `404`, если игры нет.
+- Кнопка «Удалить» в списке на странице; удаление с подтверждением.
+
+### Note
+
+- Изменений схемы нет: удаление — обычный `DELETE` по `id`, откат на 1.1.0 к той же
+  базе безопасен.
+
 ## [1.1.0] - 2026-11-11
 
 ### Added
@@ -35,6 +47,7 @@
 - Release: тег `vX.Y.Z` публикует образ с версией.
 - README.md и RUNBOOK.md.
 
-[Unreleased]: https://github.com/eoka-rust/game-shelf/compare/v1.1.0...HEAD
+[Unreleased]: https://github.com/eoka-rust/game-shelf/compare/v1.2.0...HEAD
+[1.2.0]: https://github.com/eoka-rust/game-shelf/compare/v1.1.0...v1.2.0
 [1.1.0]: https://github.com/eoka-rust/game-shelf/compare/v1.0.0...v1.1.0
 [1.0.0]: https://github.com/eoka-rust/game-shelf/releases/tag/v1.0.0
