@@ -49,7 +49,7 @@ async def apply_migrations() -> list[str]:
 class GameRepo:
     """Доступ к таблице games. В тестах подменяется заглушкой через Depends."""
 
-    _SELECT = "SELECT id, title, platform, status FROM games"
+    _SELECT = "SELECT id, title, platform, status, rating FROM games"
 
     def __init__(self, conn: psycopg.AsyncConnection) -> None:
         self.conn = conn
@@ -65,30 +65,42 @@ class GameRepo:
                 )
             return await cur.fetchall()
 
-    async def add_game(self, title: str, platform: str, status: str) -> dict[str, Any]:
+    async def add_game(
+        self,
+        title: str,
+        platform: str,
+        status: str,
+        rating: int | None = None,
+    ) -> dict[str, Any]:
         async with self.conn.cursor(row_factory=dict_row) as cur:
             await cur.execute(
                 """
-                INSERT INTO games (title, platform, status)
-                VALUES (%s, %s, %s)
-                RETURNING id, title, platform, status
+                INSERT INTO games (title, platform, status, rating)
+                VALUES (%s, %s, %s, %s)
+                RETURNING id, title, platform, status, rating
                 """,
-                (title, platform, status),
+                (title, platform, status, rating),
             )
             row = await cur.fetchone()
         await self.conn.commit()
         return row
 
-    async def update_game(self, game_id: int, status: str | None = None) -> dict[str, Any] | None:
+    async def update_game(
+        self,
+        game_id: int,
+        status: str | None = None,
+        rating: int | None = None,
+    ) -> dict[str, Any] | None:
         async with self.conn.cursor(row_factory=dict_row) as cur:
             await cur.execute(
                 """
                 UPDATE games
-                SET status = COALESCE(%s, status)
+                SET status = COALESCE(%s, status),
+                    rating = COALESCE(%s, rating)
                 WHERE id = %s
-                RETURNING id, title, platform, status
+                RETURNING id, title, platform, status, rating
                 """,
-                (status, game_id),
+                (status, rating, game_id),
             )
             row = await cur.fetchone()
         await self.conn.commit()

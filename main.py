@@ -28,10 +28,12 @@ class GameIn(BaseModel):
     title: str = Field(min_length=1, max_length=200)
     platform: str = Field(min_length=1, max_length=50)
     status: Status = "backlog"
+    rating: int | None = Field(default=None, ge=1, le=10)
 
 
 class GamePatch(BaseModel):
     status: Status | None = None
+    rating: int | None = Field(default=None, ge=1, le=10)
 
 
 class GameOut(BaseModel):
@@ -39,6 +41,7 @@ class GameOut(BaseModel):
     title: str
     platform: str
     status: str
+    rating: int | None = None
 
 
 @app.get("/", include_in_schema=False)
@@ -66,7 +69,7 @@ async def list_games(
 
 @app.post("/games", response_model=GameOut, status_code=201)
 async def add_game(game: GameIn, repo: GameRepo = Depends(get_repo)) -> dict:
-    return await repo.add_game(game.title, game.platform, game.status)
+    return await repo.add_game(game.title, game.platform, game.status, game.rating)
 
 
 @app.patch("/games/{game_id}", response_model=GameOut)
@@ -75,7 +78,7 @@ async def update_game(
     patch: GamePatch,
     repo: GameRepo = Depends(get_repo),
 ) -> dict:
-    game = await repo.update_game(game_id, status=patch.status)
+    game = await repo.update_game(game_id, status=patch.status, rating=patch.rating)
     if game is None:
         raise HTTPException(status_code=404, detail="Игра не найдена")
     return game

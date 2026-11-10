@@ -5,6 +5,20 @@
 
 ## [Unreleased]
 
+## [1.1.0] - 2026-11-11
+
+### Added
+
+- Оценка игры от 1 до 10 (`rating`) в `POST /games` и `PATCH /games/{id}`;
+  в ответах и на странице появилось поле оценки.
+- Миграция `002_add_rating.sql`: `ALTER TABLE games ADD COLUMN IF NOT EXISTS rating SMALLINT`.
+  Обратно совместима — столбец nullable, код v1.0.0 продолжает работать.
+- Тесты на оценку: сохранение, изменение, отказ при значении вне 1..10.
+
+### Changed
+
+- `GameRepo` и ответы API перечисляют `rating` явно; существующие строки получают `NULL`.
+
 ## [1.0.0] - 2026-11-10
 
 ### Added
@@ -21,5 +35,6 @@
 - Release: тег `vX.Y.Z` публикует образ с версией.
 - README.md и RUNBOOK.md.
 
-[Unreleased]: https://github.com/USERNAME/game-shelf/compare/v1.0.0...HEAD
+[Unreleased]: https://github.com/USERNAME/game-shelf/compare/v1.1.0...HEAD
+[1.1.0]: https://github.com/USERNAME/game-shelf/compare/v1.0.0...v1.1.0
 [1.0.0]: https://github.com/USERNAME/game-shelf/releases/tag/v1.0.0

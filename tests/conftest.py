@@ -22,17 +22,36 @@ class FakeRepo:
             games = [game for game in games if game["status"] == status]
         return list(reversed(games))
 
-    async def add_game(self, title: str, platform: str, status: str) -> dict:
-        game = {"id": self.next_id, "title": title, "platform": platform, "status": status}
+    async def add_game(
+        self,
+        title: str,
+        platform: str,
+        status: str,
+        rating: int | None = None,
+    ) -> dict:
+        game = {
+            "id": self.next_id,
+            "title": title,
+            "platform": platform,
+            "status": status,
+            "rating": rating,
+        }
         self.next_id += 1
         self.games.append(game)
         return game
 
-    async def update_game(self, game_id: int, status: str | None = None) -> dict | None:
+    async def update_game(
+        self,
+        game_id: int,
+        status: str | None = None,
+        rating: int | None = None,
+    ) -> dict | None:
         for game in self.games:
             if game["id"] == game_id:
                 if status is not None:
                     game["status"] = status
+                if rating is not None:
+                    game["rating"] = rating
                 return game
         return None
 

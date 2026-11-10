@@ -22,7 +22,7 @@
       padding: 4px 10px; border-radius: 999px;
     }
     form {
-      display: grid; grid-template-columns: 2fr 1fr 1fr auto; gap: 8px;
+      display: grid; grid-template-columns: 2fr 1fr 1fr 150px auto; gap: 8px;
       margin: 24px 0; padding: 16px;
       background: #1e293b; border: 1px solid #334155; border-radius: 12px;
     }
@@ -65,6 +65,19 @@
       <option value="playing">Играю</option>
       <option value="completed">Пройдена</option>
     </select>
+    <select id="rating" name="rating">
+      <option value="">Без оценки</option>
+      <option value="10">10</option>
+      <option value="9">9</option>
+      <option value="8">8</option>
+      <option value="7">7</option>
+      <option value="6">6</option>
+      <option value="5">5</option>
+      <option value="4">4</option>
+      <option value="3">3</option>
+      <option value="2">2</option>
+      <option value="1">1</option>
+    </select>
     <button type="submit">Добавить</button>
   </form>
 
@@ -100,7 +113,7 @@ function render(game) {
   title.textContent = game.title;
   const meta = document.createElement("div");
   meta.className = "muted";
-  meta.textContent = game.platform;
+  meta.textContent = game.rating ? `${game.platform} · оценка ${game.rating}/10` : game.platform;
   left.append(title, meta);
 
   const select = document.createElement("select");
@@ -140,6 +153,9 @@ document.getElementById("add-form").addEventListener("submit", async (event) => 
     title: document.getElementById("title").value,
     platform: document.getElementById("platform").value,
     status: document.getElementById("status").value,
+    rating: document.getElementById("rating").value
+      ? Number(document.getElementById("rating").value)
+      : null,
   };
   await fetch("/games", {
     method: "POST",

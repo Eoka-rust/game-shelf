@@ -16,8 +16,8 @@ FastAPI + PostgreSQL, одна HTML-страница, четыре эндпои�
 | GET | `/health` | проверка живости (её использует healthcheck в compose) |
 | GET | `/version` | версия образа, попавшая в сборку |
 | GET | `/games` | список игр, фильтр `?status=backlog\|playing\|completed` |
-| POST | `/games` | добавить игру: `{"title": "...", "platform": "...", "status": "backlog"}` |
-| PATCH | `/games/{id}` | сменить статус: `{"status": "playing"}` |
+| POST | `/games` | добавить игру: `{"title": "...", "platform": "...", "status": "backlog", "rating": 9}` (оценка 1..10 или `null`) |
+| PATCH | `/games/{id}` | сменить статус и/или оценку: `{"status": "playing", "rating": 8}` |
 
 Swagger: `http://localhost:8000/docs`.
 

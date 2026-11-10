@@ -19,11 +19,42 @@ def test_index_page_renders(client):
 def test_add_game_and_list(client):
     created = client.post("/games", json={"title": "Hades", "platform": "PC"})
     assert created.status_code == 201
-    assert created.json() == {"id": 1, "title": "Hades", "platform": "PC", "status": "backlog"}
+    assert created.json() == {
+        "id": 1,
+        "title": "Hades",
+        "platform": "PC",
+        "status": "backlog",
+        "rating": None,
+    }
 
     listing = client.get("/games")
     assert listing.status_code == 200
     assert [game["title"] for game in listing.json()] == ["Hades"]
+
+
+def test_game_can_be_created_with_rating(client):
+    created = client.post("/games", json={"title": "Hades", "platform": "PC", "rating": 9})
+    assert created.status_code == 201
+    assert created.json()["rating"] == 9
+
+
+def test_rating_out_of_range_is_rejected(client):
+    assert (
+        client.post("/games", json={"title": "Hades", "platform": "PC", "rating": 11}).status_code
+        == 422
+    )
+    assert (
+        client.post("/games", json={"title": "Hades", "platform": "PC", "rating": 0}).status_code
+        == 422
+    )
+
+
+def test_patch_updates_rating(client):
+    game_id = client.post("/games", json={"title": "Hades", "platform": "PC"}).json()["id"]
+
+    updated = client.patch(f"/games/{game_id}", json={"rating": 8})
+    assert updated.status_code == 200
+    assert updated.json()["rating"] == 8
 
 
 def test_list_filters_by_status(client):
