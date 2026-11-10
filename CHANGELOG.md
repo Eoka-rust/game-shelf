@@ -35,6 +35,6 @@
 - Release: тег `vX.Y.Z` публикует образ с версией.
 - README.md и RUNBOOK.md.
 
-[Unreleased]: https://github.com/USERNAME/game-shelf/compare/v1.1.0...HEAD
-[1.1.0]: https://github.com/USERNAME/game-shelf/compare/v1.0.0...v1.1.0
-[1.0.0]: https://github.com/USERNAME/game-shelf/releases/tag/v1.0.0
+[Unreleased]: https://github.com/eoka-rust/game-shelf/compare/v1.1.0...HEAD
+[1.1.0]: https://github.com/eoka-rust/game-shelf/compare/v1.0.0...v1.1.0
+[1.0.0]: https://github.com/eoka-rust/game-shelf/releases/tag/v1.0.0

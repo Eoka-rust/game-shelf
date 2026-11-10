@@ -79,7 +79,7 @@ CHANGELOG.md          история версий
 | `DATABASE_URL` | app | строка подключения к PostgreSQL |
 | `APP_VERSION` | app | версия, которую показывает `/version` |
 | `POSTGRES_USER` / `POSTGRES_PASSWORD` / `POSTGRES_DB` | db | реквизиты базы (пароль подставляет compose) |
-| `IMAGE_NAME` | compose | `ghcr.io/<логин>/game-shelf` |
+| `IMAGE_NAME` | compose | `ghcr.io/eoka-rust/game-shelf` |
 
 ## CI/CD
 
@@ -88,7 +88,7 @@ CHANGELOG.md          история версий
 1. `check` — Ruff (линтер + форматирование) и pytest; поднимается service-контейнер
    postgres, чтобы прогнать миграции на настоящей базе;
 2. `build` — только если `check` зелёный (`needs: check`) и только для `main`:
-   образ собирается и публикуется в `ghcr.io/<логин>/game-shelf` с тегами `latest` и `sha-…`.
+   образ собирается и публикуется в `ghcr.io/eoka-rust/game-shelf` с тегами `latest` и `sha-…`.
 
 `release.yml` — на тег вида `vX.Y.Z`:
 
