@@ -5,6 +5,14 @@
 
 ## [Unreleased]
 
+## [1.2.3] - 2026-11-11
+
+### Fixed
+
+- На телефоне карточка игры растягивалась на пустую высоту: во flex-колонке
+  `flex: 1 1 200px` у `.game__info` работал как высота. Заменено на `flex: 0 0 auto`,
+  у карточки `justify-content: flex-start`.
+
 ## [1.2.2] - 2026-11-11
 
 ### Fixed
@@ -70,7 +78,8 @@
 - Release: тег `vX.Y.Z` публикует образ с версией.
 - README.md и RUNBOOK.md.
 
-[Unreleased]: https://github.com/eoka-rust/game-shelf/compare/v1.2.2...HEAD
+[Unreleased]: https://github.com/eoka-rust/game-shelf/compare/v1.2.3...HEAD
+[1.2.3]: https://github.com/eoka-rust/game-shelf/compare/v1.2.2...v1.2.3
 [1.2.2]: https://github.com/eoka-rust/game-shelf/compare/v1.2.1...v1.2.2
 [1.2.1]: https://github.com/eoka-rust/game-shelf/compare/v1.2.0...v1.2.1
 [1.2.0]: https://github.com/eoka-rust/game-shelf/compare/v1.1.0...v1.2.0
