@@ -5,6 +5,14 @@
 
 ## [Unreleased]
 
+## [1.2.2] - 2026-11-11
+
+### Fixed
+
+- Текст в селектах «В очередь» и «Без оценки» упирался в стрелку: добавлен
+  `padding-right` под нативный caret, ширина страницы увеличена до 860px,
+  колонки формы перераспределены (`1.8fr / 1fr / 1.15fr / 145px / auto`).
+
 ## [1.2.1] - 2026-11-11
 
 ### Fixed
@@ -62,7 +70,8 @@
 - Release: тег `vX.Y.Z` публикует образ с версией.
 - README.md и RUNBOOK.md.
 
-[Unreleased]: https://github.com/eoka-rust/game-shelf/compare/v1.2.1...HEAD
+[Unreleased]: https://github.com/eoka-rust/game-shelf/compare/v1.2.2...HEAD
+[1.2.2]: https://github.com/eoka-rust/game-shelf/compare/v1.2.1...v1.2.2
 [1.2.1]: https://github.com/eoka-rust/game-shelf/compare/v1.2.0...v1.2.1
 [1.2.0]: https://github.com/eoka-rust/game-shelf/compare/v1.1.0...v1.2.0
 [1.1.0]: https://github.com/eoka-rust/game-shelf/compare/v1.0.0...v1.1.0
