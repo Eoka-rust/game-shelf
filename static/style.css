@@ -1,0 +1,235 @@
+/* Полка игр — все стили страницы */
+
+:root {
+  color-scheme: light dark;
+
+  --bg: #0f172a;
+  --panel: #1e293b;
+  --field-bg: #0f172a;
+  --border: #334155;
+  --border-strong: #475569;
+  --text: #e2e8f0;
+  --muted: #94a3b8;
+  --accent: #2563eb;
+  --accent-hover: #1d4ed8;
+  --danger: #7f1d1d;
+  --danger-text: #f87171;
+  --radius: 10px;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  padding: clamp(16px, 4vw, 32px) clamp(12px, 3vw, 24px);
+  font: 16px/1.5 system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  background: var(--bg);
+  color: var(--text);
+}
+
+.page {
+  width: 100%;
+  max-width: 760px;
+  margin-inline: auto;
+}
+
+.page__head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 8px 12px;
+}
+
+.page__title {
+  margin: 0 0 4px;
+  font-size: clamp(22px, 5vw, 28px);
+  line-height: 1.2;
+}
+
+.page__subtitle {
+  margin: 0;
+  color: var(--muted);
+  font-size: 14px;
+}
+
+.version {
+  white-space: nowrap;
+  padding: 4px 10px;
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  background: var(--panel);
+  font: 13px ui-monospace, SFMono-Regular, Menlo, monospace;
+}
+
+/* Форма добавления.
+   minmax(0, …) и width: 100% у полей — без них браузер не даёт колонкам
+   сжаться уже своей внутренней ширины, и кнопка вылезает за карточку. */
+.add-form {
+  display: grid;
+  grid-template-columns:
+    minmax(0, 2fr) minmax(0, 1fr) minmax(0, 1fr)
+    minmax(0, 150px) auto;
+  gap: 8px;
+  margin: 24px 0;
+  padding: 16px;
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+}
+
+.field {
+  width: 100%;
+  min-width: 0;
+  padding: 8px 10px;
+  font: inherit;
+  color: inherit;
+  background: var(--field-bg);
+  border: 1px solid var(--border-strong);
+  border-radius: 8px;
+}
+
+.field:focus-visible,
+.btn:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+.btn {
+  width: auto;
+  min-width: 0;
+  min-height: 40px;
+  padding: 8px 16px;
+  font: inherit;
+  font-weight: 600;
+  white-space: nowrap;
+  color: #fff;
+  background: var(--accent);
+  border: 1px solid var(--accent);
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+.btn:hover {
+  background: var(--accent-hover);
+  border-color: var(--accent-hover);
+}
+
+.btn--danger {
+  font-weight: 500;
+  color: var(--danger-text);
+  background: transparent;
+  border-color: var(--danger);
+}
+
+.btn--danger:hover {
+  color: #fee2e2;
+  background: var(--danger);
+  border-color: var(--danger);
+}
+
+/* Список игр */
+
+.games {
+  display: grid;
+  gap: 8px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.game {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 12px 16px;
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+}
+
+.game__info {
+  flex: 1 1 200px;
+  min-width: 0;
+}
+
+.game__title {
+  font-weight: 600;
+  overflow-wrap: anywhere;
+}
+
+.game__meta {
+  color: var(--muted);
+  font-size: 14px;
+  overflow-wrap: anywhere;
+}
+
+.game__controls {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+}
+
+.game__controls .field {
+  width: auto;
+  min-width: 140px;
+}
+
+.empty {
+  margin: 0;
+  padding: 24px;
+  text-align: center;
+  color: var(--muted);
+}
+
+/* Планшет: форма в две колонки, название и кнопка — на всю ширину */
+@media (max-width: 900px) {
+  .add-form {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .field--wide,
+  .add-form .btn {
+    grid-column: 1 / -1;
+  }
+}
+
+/* Телефон: одна колонка, крупные кнопки, управление на всю ширину */
+@media (max-width: 560px) {
+  .add-form {
+    grid-template-columns: minmax(0, 1fr);
+    padding: 12px;
+  }
+
+  .game {
+    flex-direction: column;
+    align-items: stretch;
+    padding: 12px;
+  }
+
+  .game__controls {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+  }
+
+  .game__controls .field {
+    width: 100%;
+    min-height: 44px;
+  }
+
+  .btn {
+    min-height: 44px;
+  }
+}

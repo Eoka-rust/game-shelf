@@ -16,6 +16,20 @@ def test_index_page_renders(client):
     assert "Полка игр" in response.text
 
 
+def test_index_uses_external_stylesheet(client):
+    response = client.get("/")
+    assert "/static/style.css" in response.text
+    assert "<style" not in response.text
+
+
+def test_stylesheet_is_served(client):
+    response = client.get("/static/style.css")
+    assert response.status_code == 200
+    assert response.headers["content-type"].startswith("text/css")
+    assert ".add-form" in response.text
+    assert "@media (max-width: 560px)" in response.text
+
+
 def test_add_game_and_list(client):
     created = client.post("/games", json={"title": "Hades", "platform": "PC"})
     assert created.status_code == 201

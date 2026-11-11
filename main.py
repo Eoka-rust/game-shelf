@@ -4,6 +4,7 @@ from typing import Literal
 
 from fastapi import Depends, FastAPI, HTTPException
 from fastapi.responses import FileResponse
+from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel, Field
 
 from config import settings
@@ -22,6 +23,8 @@ async def lifespan(app: FastAPI):
 
 
 app = FastAPI(title="Полка игр", version=settings.app_version, lifespan=lifespan)
+
+app.mount("/static", StaticFiles(directory=STATIC_DIR), name="static")
 
 
 class GameIn(BaseModel):

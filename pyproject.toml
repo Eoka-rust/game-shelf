@@ -1,6 +1,6 @@
 [project]
 name = "game-shelf"
-version = "1.2.0"
+version = "1.2.1"
 description = "Полка игр — мини-сервис на FastAPI + PostgreSQL"
 requires-python = ">=3.12,<3.13"
 dependencies = [

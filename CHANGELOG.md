@@ -5,6 +5,21 @@
 
 ## [Unreleased]
 
+## [1.2.1] - 2026-11-11
+
+### Fixed
+
+- Кнопка «Добавить» выходила за границу карточки формы: колонки grid не могли
+  сжаться ниже внутренней ширины полей. Исправлено `minmax(0, …)`,
+  `min-width: 0` и `width: 100%` у полей, `white-space: nowrap` у кнопки.
+
+### Changed
+
+- Все стили вынесены из `index.html` в `static/style.css` и отдаются по `/static/style.css`.
+- Адаптивная вёрстка: 2 колонки до 900px, 1 колонка до 560px, карточки игр
+  в столбик на телефоне, размер интерактивных элементов от 44px.
+- Тесты: страница подключает внешний CSS, `/static/style.css` отдаётся с `text/css`.
+
 ## [1.2.0] - 2026-11-11
 
 ### Added
@@ -47,7 +62,8 @@
 - Release: тег `vX.Y.Z` публикует образ с версией.
 - README.md и RUNBOOK.md.
 
-[Unreleased]: https://github.com/eoka-rust/game-shelf/compare/v1.2.0...HEAD
+[Unreleased]: https://github.com/eoka-rust/game-shelf/compare/v1.2.1...HEAD
+[1.2.1]: https://github.com/eoka-rust/game-shelf/compare/v1.2.0...v1.2.1
 [1.2.0]: https://github.com/eoka-rust/game-shelf/compare/v1.1.0...v1.2.0
 [1.1.0]: https://github.com/eoka-rust/game-shelf/compare/v1.0.0...v1.1.0
 [1.0.0]: https://github.com/eoka-rust/game-shelf/releases/tag/v1.0.0

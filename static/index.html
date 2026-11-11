@@ -4,72 +4,29 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Полка игр</title>
-  <style>
-    :root { color-scheme: light dark; }
-    * { box-sizing: border-box; }
-    body {
-      margin: 0; padding: 32px 16px;
-      font: 16px/1.5 system-ui, -apple-system, "Segoe UI", sans-serif;
-      background: #0f172a; color: #e2e8f0;
-    }
-    main { max-width: 760px; margin: 0 auto; }
-    header { display: flex; justify-content: space-between; align-items: baseline; gap: 12px; }
-    h1 { font-size: 28px; margin: 0 0 4px; }
-    .muted { color: #94a3b8; font-size: 14px; }
-    .version {
-      font: 13px ui-monospace, SFMono-Regular, Menlo, monospace;
-      background: #1e293b; border: 1px solid #334155;
-      padding: 4px 10px; border-radius: 999px;
-    }
-    form {
-      display: grid; grid-template-columns: 2fr 1fr 1fr 150px auto; gap: 8px;
-      margin: 24px 0; padding: 16px;
-      background: #1e293b; border: 1px solid #334155; border-radius: 12px;
-    }
-    input, select, button {
-      font: inherit; padding: 8px 10px; border-radius: 8px;
-      border: 1px solid #475569; background: #0f172a; color: inherit;
-    }
-    button { cursor: pointer; background: #2563eb; border-color: #2563eb; font-weight: 600; }
-    button:hover { background: #1d4ed8; }
-    button.danger {
-      background: transparent; border-color: #7f1d1d; color: #f87171; font-weight: 500;
-    }
-    button.danger:hover { background: #7f1d1d; color: #fee2e2; }
-    ul { list-style: none; padding: 0; margin: 0; display: grid; gap: 8px; }
-    li {
-      display: flex; align-items: center; justify-content: space-between; gap: 12px;
-      padding: 12px 16px; background: #1e293b;
-      border: 1px solid #334155; border-radius: 10px;
-    }
-    .title { font-weight: 600; }
-    .row { display: flex; align-items: center; gap: 12px; }
-    .empty { padding: 24px; text-align: center; color: #94a3b8; }
-    @media (max-width: 620px) {
-      form { grid-template-columns: 1fr; }
-      li { flex-direction: column; align-items: flex-start; }
-    }
-  </style>
+  <link rel="stylesheet" href="/static/style.css">
 </head>
 <body>
-<main>
-  <header>
+<main class="page">
+  <header class="page__head">
     <div>
-      <h1>Полка игр</h1>
-      <div class="muted">Что пройдено, что в процессе, что ждёт своей очереди</div>
+      <h1 class="page__title">Полка игр</h1>
+      <p class="page__subtitle">Что пройдено, что в процессе, что ждёт своей очереди</p>
     </div>
     <div class="version" id="version">версия …</div>
   </header>
 
-  <form id="add-form">
-    <input id="title" name="title" placeholder="Название игры" required maxlength="200" autocomplete="off">
-    <input id="platform" name="platform" placeholder="Платформа" required maxlength="50" autocomplete="off">
-    <select id="status" name="status">
+  <form id="add-form" class="add-form" autocomplete="off">
+    <input id="title" class="field field--wide" name="title"
+           placeholder="Название игры" required maxlength="200">
+    <input id="platform" class="field" name="platform"
+           placeholder="Платформа" required maxlength="50">
+    <select id="status" class="field" name="status">
       <option value="backlog">В очереди</option>
       <option value="playing">Играю</option>
       <option value="completed">Пройдена</option>
     </select>
-    <select id="rating" name="rating">
+    <select id="rating" class="field" name="rating">
       <option value="">Без оценки</option>
       <option value="10">10</option>
       <option value="9">9</option>
@@ -82,11 +39,11 @@
       <option value="2">2</option>
       <option value="1">1</option>
     </select>
-    <button type="submit">Добавить</button>
+    <button type="submit" class="btn btn--primary">Добавить</button>
   </form>
 
-  <ul id="list"></ul>
-  <div class="empty" id="empty" hidden>Пока пусто — добавьте первую игру</div>
+  <ul id="list" class="games"></ul>
+  <p class="empty" id="empty" hidden>Пока пусто — добавьте первую игру</p>
 </main>
 
 <script>
@@ -110,17 +67,20 @@ async function loadVersion() {
 
 function render(game) {
   const li = document.createElement("li");
+  li.className = "game";
 
-  const left = document.createElement("div");
+  const info = document.createElement("div");
+  info.className = "game__info";
   const title = document.createElement("div");
-  title.className = "title";
+  title.className = "game__title";
   title.textContent = game.title;
   const meta = document.createElement("div");
-  meta.className = "muted";
+  meta.className = "game__meta";
   meta.textContent = game.rating ? `${game.platform} · оценка ${game.rating}/10` : game.platform;
-  left.append(title, meta);
+  info.append(title, meta);
 
   const select = document.createElement("select");
+  select.className = "field";
   for (const [value, label] of Object.entries(STATUS_LABELS)) {
     const option = document.createElement("option");
     option.value = value;
@@ -139,7 +99,7 @@ function render(game) {
 
   const remove = document.createElement("button");
   remove.type = "button";
-  remove.className = "danger";
+  remove.className = "btn btn--danger";
   remove.textContent = "Удалить";
   remove.addEventListener("click", async () => {
     if (!confirm(`Удалить «${game.title}»?`)) return;
@@ -147,11 +107,11 @@ function render(game) {
     loadGames();
   });
 
-  const row = document.createElement("div");
-  row.className = "row";
-  row.append(select, remove);
+  const controls = document.createElement("div");
+  controls.className = "game__controls";
+  controls.append(select, remove);
 
-  li.append(left, row);
+  li.append(info, controls);
   return li;
 }
 
